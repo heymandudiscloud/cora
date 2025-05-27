@@ -1,0 +1,115 @@
+/* Inter Regular */
+@font-face {
+  font-family: 'Inter';
+  src: url('./fonts/Inter-VariableFont_opsz,wght.ttf') format('truetype');
+  font-weight: 100 900;  /* Supports full range */
+  font-style: normal;
+  font-display: swap;
+}
+
+
+/* Satoshi Regular */
+@font-face {
+  font-family: 'Satoshi';
+  src: url('./fonts/Satoshi-Regular.woff2') format('woff2'),
+       url('./fonts/Satoshi-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+html {
+    margin-left: 0 5%;
+    margin-right: 0 5%;
+}
+
+.logo {
+    height: 75px;
+    width: auto;
+    border-radius: 64px;
+}
+
+.ora {
+    display: inline-block;
+    font-family: 'Satoshi';
+    font-weight: bold;
+    color: rgb(234, 126, 64);
+    font-size:75px;
+    text-decoration: none;
+    line-height: 1;
+    transform: translateY(-18px);
+    margin-left: 5px;
+}
+
+
+body {
+      font-family: 'Inter', sans-serif;
+      padding: 0 9rem;
+}
+
+nav {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: rgb(234, 126, 64);
+}
+
+.nav-links a:hover {
+    color: #ffb64aff;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: clamp(1rem, 4vw, 5rem);
+    font-weight: 500;
+    font-size: clamp(0.9rem, 1.2vw, 1.125rem);
+
+}
+
+.search-icon {
+    float: right;
+    width: 25px;
+    height: 25px;
+    filter: invert(67%) sepia(16%) saturate(5156%) hue-rotate(331deg) brightness(95%) contrast(93%);
+}
+
+.search-link:hover img{
+    filter: invert(84%) sepia(96%) saturate(2637%) hue-rotate(317deg) brightness(100%) contrast(101%);
+}
+
+.log-in {
+    text-align: right;
+    border: 2px solid rgb(234, 126, 64);
+    border-radius: 70px;
+}
+
+a.log-in {
+    font-weight: 600;
+    padding: 10px;
+    text-decoration: none;
+    color: rgb(234, 126, 64);
+}
+
+a.log-in:hover{
+    color: #ffff;
+    background-color: rgb(234, 126, 64);
+
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+hr {
+    width: 100vw;
+    margin-left: calc(-1 * (100vw - 100%) / 2);
+}
