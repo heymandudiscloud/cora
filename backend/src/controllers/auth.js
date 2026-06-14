@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { getUserByEmail, getUserByUsername, addUser, getUserByEmailSafe } = require('../db/users');
-
+const { getUserByEmail, getUserByEmailSafe, getUserByUsername, addUser, getUserByIdSafe } = require('../db/users');
 const register = async (req, res) => {
   try {
     // 1. Destructure the fields from req.body
@@ -89,7 +88,7 @@ const login = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Register error: ', error);
+    console.error('Login error: ', error);
     res.status(500).json({ error: 'Internal server error!' });
   };
 };
@@ -99,7 +98,26 @@ const logout = async (req, res) => {
 };
 
 const validateSession = async (req, res) => {
-  res.json({ message: 'validateSession coming soon' });
+  try {
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(' ')[1];
+    
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await getUserByIdSafe(decoded.userId);
+
+    if (!user) {
+      return res.status(401).json({ error: 'Validation Error!'})
+    }
+
+    res.status(200).json({ 
+      message: 'Validation successful!',
+      user: user
+    });
+  } catch (error) {
+    console.error('Validation error: ', error);
+    res.status(401).json({ error: 'Internal server error!'})
+  }
 };
 
 const forgotPassword = async (req, res) => {
