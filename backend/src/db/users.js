@@ -12,6 +12,17 @@ const getUserByEmail = async (email) => {
   return result.rows[0];
 };
 
+const getUserByEmailSafe = async (email) => {
+  const result = await pool.query(
+    `SELECT id, email, username, first_name, last_name, bio, profile_photo_url, 
+    is_private, is_verified, email_verified, total_fuel, challenges_completed, 
+    longest_streak, hide_fuel_by_default, account_status, created_at, updated_at
+    FROM users WHERE email = $1`,
+    [email]
+  );
+  return result.rows[0];
+};
+
 const getUserByUsername = async (username) => {
   const result = await pool.query(
     `SELECT * FROM users WHERE username = $1`,
@@ -20,9 +31,31 @@ const getUserByUsername = async (username) => {
   return result.rows[0];
 };
 
+const getUserByUsernameSafe = async (username) => {
+  const result = await pool.query(
+    `SELECT id, email, username, first_name, last_name, bio, profile_photo_url, 
+    is_private, is_verified, email_verified, total_fuel, challenges_completed, 
+    longest_streak, hide_fuel_by_default, account_status, created_at, updated_at
+    FROM users WHERE username = $1`,
+    [username]
+  );
+  return result.rows[0];
+};
+
 const getUserById = async (id) => {
   const result = await pool.query(
     `SELECT * FROM users WHERE id = $1`,
+    [id]
+  );
+  return result.rows[0];
+};
+
+const getUserByIdSafe = async (id) => {
+  const result = await pool.query(
+    `SELECT id, email, username, first_name, last_name, bio, profile_photo_url, 
+    is_private, is_verified, email_verified, total_fuel, challenges_completed, 
+    longest_streak, hide_fuel_by_default, account_status, created_at, updated_at
+    FROM users WHERE id = $1`,
     [id]
   );
   return result.rows[0];
@@ -47,10 +80,6 @@ const addUser = async (email, first_name, last_name, username, passwordHash) => 
 // =============================================================
 
 const updateUser = async (id, fields) => {
-  const result = await pool.query(
-    `UPDATE users
-    SET `
-  )
 };
 
 // =============================================================
@@ -63,8 +92,11 @@ const deleteUser = async (id) => {
 
 module.exports = {
   getUserByEmail,
+  getUserByEmailSafe,
   getUserByUsername,
+  getUserByUsernameSafe,
   getUserById,
+  getUserByIdSafe,
   addUser,
   updateUser,
   deleteUser

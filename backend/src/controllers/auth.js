@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { getUserByEmail, getUserByUsername, addUser } = require('../db/users');
+const { getUserByEmail, getUserByUsername, addUser, getUserByEmailSafe } = require('../db/users');
 
 const register = async (req, res) => {
   try {
@@ -59,37 +59,39 @@ const login = async (req, res) => {
     const {email, password } = req.body;
 
     if (!email || !password) {
-      res.status(400).json({ error: 'Missing fields!'});
+      return res.status(400).json({ error: 'Missing fields!'});
     }
 
     const user = await getUserByEmail(email);
 
     if (!user) {
-      res.status(401).json({ error: 'Login error!'});
+      return res.status(401).json({ error: 'Login error!'});
     }
 
-    const isMatch = await bcrypt.compare(password, user.hashedPassword);
+    const isMatch = await bcrypt.compare(password, user.password_hash);
 
     if (!isMatch) {
-      res.status(401).json({ error: 'Login error!'});
+      return res.status(401).json({ error: 'Login error!'});
     }
 
     const token = jwt.sign(
-          { userId: user.id },
-          process.env.JWT_SECRET,
-          { expiresIn: '7d'}
-      );
+      { userId: user.id },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d'}
+    );
+
+    const safeUser = await getUserByEmailSafe(email);  
 
     res.status(200).json({ 
-          message: 'Login successful!',
-          token: token,
-          user
-      });
+      message: 'Login successful!',
+      token: token,
+      user: safeUser
+    });
 
   } catch (error) {
     console.error('Register error: ', error);
     res.status(500).json({ error: 'Internal server error!' });
-  }
+  };
 };
 
 const logout = async (req, res) => {
