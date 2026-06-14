@@ -94,7 +94,12 @@ const login = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-  res.json({ message: 'logout coming soon' });
+  try {
+    res.status(200).json({ message: 'Logout successful!'});
+  } catch (error) {
+    console.error('Logout error: ', error);
+    res.status(500).json({ error: 'Internal server error!' });
+  }
 };
 
 const validateSession = async (req, res) => {
