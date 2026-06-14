@@ -19,6 +19,7 @@ CREATE TABLE users (
   is_private               BOOLEAN NOT NULL DEFAULT FALSE,
   is_verified              BOOLEAN NOT NULL DEFAULT FALSE,
   email_verified           BOOLEAN NOT NULL DEFAULT FALSE,
+  password_hash            VARCHAR(255),
   total_fuel               INTEGER NOT NULL DEFAULT 0,
   challenges_completed     INTEGER NOT NULL DEFAULT 0,
   longest_streak           INTEGER NOT NULL DEFAULT 0,
