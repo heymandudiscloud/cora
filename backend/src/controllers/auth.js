@@ -45,7 +45,7 @@ const register = async (req, res) => {
     res.status(201).json({ 
         message: 'Account created successfully!',
         token: token,
-        user
+        user: user
     });
 
   } catch (error) {
@@ -106,15 +106,10 @@ const logout = async (req, res) => {
 
 const validateSession = async (req, res) => {
   try {
-    const authHeader = req.headers.authorization;
-    const token = authHeader && authHeader.split(' ')[1];
-    
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    const user = await getUserByIdSafe(decoded.userId);
+    const user = await getUserByIdSafe(req.user.id);
 
     if (!user) {
-      return res.status(401).json({ error: 'Validation Error!'})
+      return res.status(401).json({ error: 'Validation Error!' });
     }
 
     res.status(200).json({ 
@@ -123,7 +118,7 @@ const validateSession = async (req, res) => {
     });
   } catch (error) {
     console.error('Validation error: ', error);
-    res.status(401).json({ error: 'Internal server error!'})
+    res.status(401).json({ error: 'Internal server error!' });
   }
 };
 
