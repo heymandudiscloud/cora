@@ -82,6 +82,17 @@ const addUser = async (email, first_name, last_name, username, passwordHash) => 
 const updateUser = async (id, fields) => {
 };
 
+const updateUserPassword = async (id, passwordHash) => {
+  const result = await pool.query(
+    `UPDATE users
+     SET password_hash = $1, updated_at = NOW()
+     WHERE id = $2
+     RETURNING id`,
+    [passwordHash, id]
+  );
+  return result.rows[0];
+};
+
 // =============================================================
 // DELETE
 // =============================================================
@@ -99,5 +110,6 @@ module.exports = {
   getUserByIdSafe,
   addUser,
   updateUser,
+  updateUserPassword,
   deleteUser
 };

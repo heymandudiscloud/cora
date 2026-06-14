@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { getUserByEmail, getUserByEmailSafe, getUserByUsername, addUser, getUserByIdSafe } = require('../db/users');
+const crypto = require('crypto');
+const { getUserByEmail, getUserByEmailSafe, getUserByUsername, addUser, getUserByIdSafe, updateUserPassword } = require('../db/users');
+const { getPasswordResetToken, createPasswordResetToken, markTokenAsUsed } = require('../db/tokens');
 const register = async (req, res) => {
   try {
     // 1. Destructure the fields from req.body
@@ -126,11 +128,53 @@ const validateSession = async (req, res) => {
 };
 
 const forgotPassword = async (req, res) => {
-  res.json({ message: 'forgotPassword coming soon' });
+  try {
+    const { email } = req.body;
+    const user = await getUserByEmail(email);
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    if (user) {
+      const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
+      await createPasswordResetToken(user.id, resetToken, expiresAt);
+      // send email here later
+    }
+
+    res.status(200).json({
+      message: 'If an account exists with that email, a reset link has been sent.',
+    })
+  } catch (error) {
+    console.error('Token error: ', error);
+    res.status(401).json({ error: 'Internal server error!'})
+  }
 };
 
 const resetPassword = async (req, res) => {
-  res.json({ message: 'resetPassword coming soon' });
+  try {
+    const { token, newPassword } = req.body;
+
+    const tokenRow = await getPasswordResetToken(token);
+
+    if (!tokenRow) {
+      return res.status(400).json({ error: 'Reset error!' });
+    } 
+    if (new Date(tokenRow.expires_at) < Date.now()) {
+      return res.status(400).json({ error: 'Reset error!' });
+    }
+    if (tokenRow.used_at) {
+      return res.status(400).json({ error: 'Reset error!' });
+    }
+
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+    const user = await updateUserPassword(tokenRow.user_id, hashedPassword);
+
+    await markTokenAsUsed(tokenRow.id);
+
+    res.status(200).json({ message: 'Password reset successful!' })
+
+  } catch (error) {
+    res.status(401).json({ error: 'Internal server error!'})
+  }
 };
 
 module.exports = { 
