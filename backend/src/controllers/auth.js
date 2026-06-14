@@ -55,7 +55,41 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  res.json({ message: 'login coming soon' });
+  try {
+    const {email, password } = req.body;
+
+    if (!email || !password) {
+      res.status(400).json({ error: 'Missing fields!'});
+    }
+
+    const user = await getUserByEmail(email);
+
+    if (!user) {
+      res.status(401).json({ error: 'Login error!'});
+    }
+
+    const isMatch = await bcrypt.compare(password, user.hashedPassword);
+
+    if (!isMatch) {
+      res.status(401).json({ error: 'Login error!'});
+    }
+
+    const token = jwt.sign(
+          { userId: user.id },
+          process.env.JWT_SECRET,
+          { expiresIn: '7d'}
+      );
+
+    res.status(200).json({ 
+          message: 'Login successful!',
+          token: token,
+          user
+      });
+
+  } catch (error) {
+    console.error('Register error: ', error);
+    res.status(500).json({ error: 'Internal server error!' });
+  }
 };
 
 const logout = async (req, res) => {
