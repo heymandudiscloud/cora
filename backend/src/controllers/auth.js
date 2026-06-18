@@ -6,11 +6,11 @@ const { getPasswordResetToken, createPasswordResetToken, markTokenAsUsed } = req
 const register = async (req, res) => {
   try {
     // 1. Destructure the fields from req.body
-    const { email, first_name, last_name, username, password } = req.body;
+    const { first_name, last_name, username, email, password } = req.body;
 
     // 2. Validate that all required fields exist
     // if missing, return 400 error
-    if (!email || !first_name || !last_name || !username || !password) {
+    if ( !first_name || !last_name || !username  || !email || !password) {
         return res.status(400).json({ error: 'All fields are required!' });
     }
 

@@ -50,7 +50,9 @@ export default function App() {
             <Stack.Screen name="Login">
               {props => <LoginScreen {...props} onLogin={() => setIsLoggedIn(true)} />}
             </Stack.Screen>
-            <Stack.Screen name="Register" component={RegisterScreen} />
+            <Stack.Screen name="Register">
+              {props => <RegisterScreen {...props} onRegister={() => setIsLoggedIn(true)} />}
+            </Stack.Screen>
           </>
         )}
       </Stack.Navigator>
