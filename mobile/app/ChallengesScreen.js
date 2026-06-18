@@ -35,7 +35,7 @@ export default function ChallengesScreen({ user, navigation }) {
       <Header
         title="Challenges"
         showAdd={activeTab === 'my'}
-        onAdd={() => {}}
+        onAdd={() => navigation.navigate('CreateChallenge')}
       />
 
       <View style={styles.tabs}>

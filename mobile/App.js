@@ -12,6 +12,7 @@ import GroupsScreen from './app/GroupsScreen';
 import ProfileScreen from './app/ProfileScreen';
 import LoginScreen from './app/auth/LoginScreen';
 import RegisterScreen from './app/auth/RegisterScreen';
+import CreateChallengeScreen from './app/CreateChallengeScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -82,9 +83,12 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {isLoggedIn ? (
-          <Stack.Screen name="Main">
-            {props => <MainTabs {...props} user={user} />}
-          </Stack.Screen>
+          <>
+            <Stack.Screen name="Main">
+              {props => <MainTabs {...props} user={user} />}
+            </Stack.Screen>
+            <Stack.Screen name="CreateChallenge" component={CreateChallengeScreen} />
+          </>
         ) : (
           <>
             <Stack.Screen name="Login">

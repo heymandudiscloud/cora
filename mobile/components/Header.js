@@ -4,43 +4,50 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Platform } from 'react-native';
 import Logo from '../assets/logo.svg';
 
-export default function Header({ title, showNotifications = true, showAdd = false, onAdd, onProfile, onNotifications, profilePhoto }) {
+export default function Header({ title, showNotifications = true, showAdd = false, showProfile = true, showBack = false, onAdd, onProfile, onNotifications, onBack, profilePhoto }) {
   return (
     <View style={styles.container}>
-
-      <TouchableOpacity onPress={onProfile} style={styles.profileButton}>
-        {profilePhoto ? (
-            Platform.OS === 'web' ? (
-                <View style={{ padding: 2, borderRadius: 20, background: 'linear-gradient(135deg, #ffb64a, #e85d1a)', display: 'flex' }}>
-                    <Image source={{ uri: profilePhoto }} style={styles.profileImage} />
-                </View>
-            ) : (
-                <LinearGradient
-                colors={['#ffb64a', '#e85d1a']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.gradientBorder}
-                >
-                    <Image source={{ uri: profilePhoto }} style={styles.profileImage} />
-                </LinearGradient>
-            )
-            ) : (
-            Platform.OS === 'web' ? (
-                <View style={{ width: 36, height: 36, borderRadius: 18, background: 'linear-gradient(135deg, #ffb64a, #e85d1a)', justifyContent: 'center', alignItems: 'center', display: 'flex' }}>
-                    <Ionicons name="person" size={18} color="#fff" />
-                </View>
-            ) : (
-                <LinearGradient
-                colors={['#ffb64a', '#e85d1a']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.gradientBorder}
-                >
-                    <Ionicons name="person" size={18} color="#fff" />
-                </LinearGradient>
-            )
+      <View style={styles.left}>
+        {showBack ? (
+          <TouchableOpacity onPress={onBack}>
+            <Ionicons name="arrow-back" size={24} color="#333" />
+          </TouchableOpacity>
+        ) : showProfile && (
+          <TouchableOpacity onPress={onProfile}>
+            {profilePhoto ? (
+              Platform.OS === 'web' ? (
+                  <View style={{ padding: 2, borderRadius: 20, background: 'linear-gradient(135deg, #ffb64a, #e85d1a)', display: 'flex' }}>
+                      <Image source={{ uri: profilePhoto }} style={styles.profileImage} />
+                  </View>
+              ) : (
+                  <LinearGradient
+                  colors={['#ffb64a', '#e85d1a']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.gradientBorder}
+                  >
+                      <Image source={{ uri: profilePhoto }} style={styles.profileImage} />
+                  </LinearGradient>
+              )
+              ) : (
+              Platform.OS === 'web' ? (
+                  <View style={{ width: 36, height: 36, borderRadius: 18, background: 'linear-gradient(135deg, #ffb64a, #e85d1a)', justifyContent: 'center', alignItems: 'center', display: 'flex' }}>
+                      <Ionicons name="person" size={18} color="#fff" />
+                  </View>
+              ) : (
+                  <LinearGradient
+                  colors={['#ffb64a', '#e85d1a']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.gradientBorder}
+                  >
+                      <Ionicons name="person" size={18} color="#fff" />
+                  </LinearGradient>
+              )
+          )}
+          </TouchableOpacity>
         )}
-      </TouchableOpacity>
+      </View>
 
       <View style={styles.center}>
         <View style={styles.logoContainer}>
@@ -77,24 +84,12 @@ const styles = StyleSheet.create({
     borderBottomColor: '#eee',
     backgroundColor: '#fff',
   },
-  profileButton: {
-    width: 40,
-  },
   profileImage: {
     width: 36,
     height: 36,
     borderRadius: 18,
     borderWidth: 2,
     borderColor: '#E85D2F',
-  },
-  profilePlaceholder: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    borderWidth: 2,
-    borderColor: '#E85D2F',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   center: {
     flexDirection: 'row',
@@ -120,5 +115,9 @@ const styles = StyleSheet.create({
     height: 28,
     borderRadius: 14,
     overflow: 'hidden',
+},
+left: {
+  width: 40,
+  justifyContent: 'center',
 },
 });
