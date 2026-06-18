@@ -16,7 +16,7 @@ import RegisterScreen from './app/auth/RegisterScreen';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-function MainTabs() {
+function MainTabs({ user }) {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -34,10 +34,18 @@ function MainTabs() {
         },
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Challenges" component={ChallengesScreen} />
-      <Tab.Screen name="Groups" component={GroupsScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name="Home">
+        {props => <HomeScreen {...props} user={user} />}
+      </Tab.Screen>
+      <Tab.Screen name="Challenges">
+        {props => <ChallengesScreen {...props} user={user} />}
+      </Tab.Screen>
+      <Tab.Screen name="Groups">
+        {props => <GroupsScreen {...props} user={user} />}
+      </Tab.Screen>
+      <Tab.Screen name="Profile">
+        {props => <ProfileScreen {...props} user={user} />}
+      </Tab.Screen>
     </Tab.Navigator>
   );
 }
@@ -45,12 +53,25 @@ function MainTabs() {
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const checkToken = async () => {
-      const token = await AsyncStorage.getItem('token');
-      setIsLoggedIn(!!token);
-      setLoading(false);
+      try {
+        const token = await AsyncStorage.getItem('token');
+        if (token) {
+          const response = await fetch('http://localhost:3000/users/me', {
+            headers: { 'Authorization': `Bearer ${token}` },
+          });
+          const data = await response.json();
+          setUser(data.user);
+          setIsLoggedIn(true);
+        }
+      } catch (error) {
+        console.error('Session check failed:', error);
+      } finally {
+        setLoading(false);
+      }
     };
     checkToken();
   }, []);
@@ -61,7 +82,9 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {isLoggedIn ? (
-          <Stack.Screen name="Main" component={MainTabs} />
+          <Stack.Screen name="Main">
+            {props => <MainTabs {...props} user={user} />}
+          </Stack.Screen>
         ) : (
           <>
             <Stack.Screen name="Login">
