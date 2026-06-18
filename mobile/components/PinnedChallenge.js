@@ -16,12 +16,11 @@ export default function PinnedChallenge({ user, navigation }) {
             try {
                 const token = await AsyncStorage.getItem('token');
                 if (token) {
-                    const response = await fetch('http://localhost:3000/users/me/challenges?status=active', {
+                    const response = await fetch('http://localhost:3000/users/me/challenges?status=active&isPinned=true', {
                         headers: { 'Authorization': `Bearer ${token}` },
                     });
                     const data = await response.json();
-                    const pinned = data.challenges?.find(c => c.is_pinned);
-                    setChallenge(pinned || null);
+                    setChallenge(data.challenge || null);
                 }
             } catch (error) {
                 console.error('Failed to fetch pinned challenge:', error);
