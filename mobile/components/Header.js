@@ -1,5 +1,7 @@
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Platform } from 'react-native';
 import Logo from '../assets/logo.svg';
 
 export default function Header({ title, showNotifications = true, showAdd = false, onAdd, onProfile, onNotifications, profilePhoto }) {
@@ -8,11 +10,35 @@ export default function Header({ title, showNotifications = true, showAdd = fals
 
       <TouchableOpacity onPress={onProfile} style={styles.profileButton}>
         {profilePhoto ? (
-          <Image source={{ uri: profilePhoto }} style={styles.profileImage} />
-        ) : (
-          <View style={styles.profilePlaceholder}>
-            <Ionicons name="person" size={18} color="#E85D2F" />
-          </View>
+            Platform.OS === 'web' ? (
+                <View style={{ padding: 2, borderRadius: 20, background: 'linear-gradient(135deg, #ffb64a, #e85d1a)', display: 'flex' }}>
+                    <Image source={{ uri: profilePhoto }} style={styles.profileImage} />
+                </View>
+            ) : (
+                <LinearGradient
+                colors={['#ffb64a', '#e85d1a']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.gradientBorder}
+                >
+                    <Image source={{ uri: profilePhoto }} style={styles.profileImage} />
+                </LinearGradient>
+            )
+            ) : (
+            Platform.OS === 'web' ? (
+                <View style={{ width: 36, height: 36, borderRadius: 18, background: 'linear-gradient(135deg, #ffb64a, #e85d1a)', justifyContent: 'center', alignItems: 'center', display: 'flex' }}>
+                    <Ionicons name="person" size={18} color="#fff" />
+                </View>
+            ) : (
+                <LinearGradient
+                colors={['#ffb64a', '#e85d1a']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.gradientBorder}
+                >
+                    <Ionicons name="person" size={18} color="#fff" />
+                </LinearGradient>
+            )
         )}
       </TouchableOpacity>
 
