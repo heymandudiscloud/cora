@@ -61,6 +61,26 @@ const getUserByIdSafe = async (id) => {
   return result.rows[0];
 };
 
+const getChallenges = async (id, status = null, isPinned = null) => {
+  let query = `SELECT id, custom_name, privacy, status, start_date, end_date,
+               current_streak, longest_streak, total_fuel, is_pinned,
+               completed_at, abandoned_at, created_at, updated_at
+               FROM challenge_instances WHERE owner_id = $1`
+  const params = [id];
+
+  if (isPinned !== null) {
+    query += ` AND is_pinned = $${params.length + 1}`
+    params.push(isPinned);
+  }
+
+  if (status) {
+    query += ` AND status = $${params.length + 1}`;
+    params.push(status);
+  }
+  const result = await pool.query(query, params);
+  return result.rows;
+};
+
 // =============================================================
 // CREATE
 // =============================================================
@@ -108,6 +128,7 @@ module.exports = {
   getUserByUsernameSafe,
   getUserById,
   getUserByIdSafe,
+  getChallenges,
   addUser,
   updateUser,
   updateUserPassword,

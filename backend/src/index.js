@@ -18,8 +18,13 @@ app.listen(PORT, () => {
 
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
+const challengeTemplateRoutes = require('./routes/challengeTemplates');
+const challengeInstanceRoutes = require('./routes/challengeInstances');
+
 app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
+app.use('/challenge-templates', challengeTemplateRoutes);
+app.use('/challenge-instances', challengeInstanceRoutes);
 
 module.exports = app;
 

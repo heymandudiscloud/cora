@@ -1,4 +1,4 @@
-const { getUserByIdSafe } = require('../db/users');
+const { getUserByIdSafe, getChallenges } = require('../db/users');
 const { getPasswordResetToken, createPasswordResetToken, markTokenAsUsed } = require('../db/tokens');
 
 
@@ -79,10 +79,18 @@ const getFollowing = async (req, res) => {
 // Get own challenge instances
 const getMyChallenges = async (req, res) => {
   try {
-    // 1. Get user id from the auth token
-    // 2. Get optional status filter from req.query.status
-    // 3. Fetch challenge instances from database
-    // 4. Return instances
+    const { status } = req.query;
+    const isPinned = req.query.isPinned !== undefined 
+      ? req.query.isPinned === 'true' 
+      : null;
+
+    const challenges = await getChallenges(req.user.id, status || null, isPinned);
+
+    if (isPinned) {
+      return res.status(200).json({ challenge: challenges[0]});
+    }
+
+    return res.status(200).json({ challenges: challenges});
   } catch (error) {
     console.error('getMyChallenges error: ', error);
     res.status(500).json({ error: 'Internal server error!' });

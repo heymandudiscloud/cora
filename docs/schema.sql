@@ -79,13 +79,14 @@ CREATE TABLE follows (
 
 CREATE TABLE challenge_templates (
   id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  creator_id      UUID NOT NULL REFERENCES users(id) ON DELETE SET NULL,
+  creator_id      UUID REFERENCES users(id) ON DELETE SET NULL,
   name            VARCHAR(100) NOT NULL,
   description     TEXT NOT NULL,
   category        VARCHAR(50) NOT NULL,
   -- category: fitness, nutrition, mental_health, creativity, reading, other
   duration_days   INTEGER NOT NULL,
   is_public       BOOLEAN NOT NULL DEFAULT FALSE,
+  is_community    BOOLEAN NOT NULL DEFAULT FALSE,
   is_archived     BOOLEAN NOT NULL DEFAULT FALSE,
   instance_count  INTEGER NOT NULL DEFAULT 0,
   total_fuel      INTEGER NOT NULL DEFAULT 0,
@@ -137,6 +138,7 @@ CREATE TABLE challenge_instances (
   current_streak    INTEGER NOT NULL DEFAULT 0,
   longest_streak    INTEGER NOT NULL DEFAULT 0,
   total_fuel        INTEGER NOT NULL DEFAULT 0,
+  is_pinned BOOLEAN NOT NULL DEFAULT FALSE,
   completed_at      TIMESTAMP,
   abandoned_at      TIMESTAMP,
   created_at        TIMESTAMP NOT NULL DEFAULT NOW(),
