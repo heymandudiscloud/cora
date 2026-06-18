@@ -45,6 +45,9 @@ export default function RegisterScreen({ navigation, onRegister }) {
 
     return (
         <View style={styles.container}>
+            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                <Text style={styles.backText}>← Back</Text>
+            </TouchableOpacity>
             <Logo width={80} height={80} style={styles.logo} />
             <Text style={styles.title}>Cora</Text>
             <Text style={styles.subtitle}>Challenge. Prove. Fuel.</Text>
@@ -152,5 +155,13 @@ const styles = StyleSheet.create({
     link: {
         color: '#E85D2F',
         fontSize: 14,
-    }
+    },
+    backButton: {
+        alignSelf: 'flex-start',
+        marginBottom: 16,
+    },
+        backText: {
+        fontSize: 16,
+        color: '#E85D2F',
+    },
 });
