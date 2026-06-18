@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Logo from '../../assets/logo.svg';
 
-export default function LoginScreen() {
+export default function LoginScreen({ onLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -26,6 +26,7 @@ export default function LoginScreen() {
       }
 
       await AsyncStorage.setItem('token', token);
+      onLogin();
       console.log('Login successful!', user);
 
     } catch (error) {
@@ -57,6 +58,7 @@ export default function LoginScreen() {
         value={password}
         onChangeText={setPassword}
         secureTextEntry
+        onSubmitEditing={handleLogin}
       />
 
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
