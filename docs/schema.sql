@@ -106,12 +106,11 @@ CREATE TABLE requirements (
   template_id           UUID NOT NULL REFERENCES challenge_templates(id) ON DELETE CASCADE,
   title                 VARCHAR(100) NOT NULL,
   description           TEXT,
-  frequency             VARCHAR(30) NOT NULL,
-  -- frequency: daily, weekly, x_times_per_week
-  frequency_count       INTEGER,
-  -- used when frequency is x_times_per_week
-  proof_type            VARCHAR(30) NOT NULL,
-  -- proof_type: photo, video, journal, checkbox, combination
+  times_per_day INTEGER NOT NULL DEFAULT 1,
+  frequency_days VARCHAR(50) NOT NULL DEFAULT 'everyday',
+  specific_days TEXT[],
+  proof_type TEXT[] NOT NULL DEFAULT '{checkbox}',
+  -- proof_type: photo, video, journal, checkbox
   media_required        BOOLEAN NOT NULL DEFAULT FALSE,
   journal_required      BOOLEAN NOT NULL DEFAULT FALSE,
   sort_order            INTEGER NOT NULL DEFAULT 0,

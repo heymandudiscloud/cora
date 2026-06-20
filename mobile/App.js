@@ -13,11 +13,23 @@ import ProfileScreen from './app/ProfileScreen';
 import LoginScreen from './app/auth/LoginScreen';
 import RegisterScreen from './app/auth/RegisterScreen';
 import CreateChallengeScreen from './app/CreateChallengeScreen';
+import AddRequirementScreen from './app/AddRequirementScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-function MainTabs({ user }) {
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="CreateChallenge" component={CreateChallengeScreen} />
+        <Stack.Screen name="AddRequirement" component={AddRequirementScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+/*function MainTabs({ user }) {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -102,4 +114,4 @@ export default function App() {
       </Stack.Navigator>
     </NavigationContainer>
   );
-}
+} */

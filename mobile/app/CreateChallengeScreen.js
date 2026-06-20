@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -6,7 +6,7 @@ import Header from '../components/Header';
 import Toggle from '../components/Toggle';
 
 
-export default function CreateChallengeScreen({ navigation }) {
+export default function CreateChallengeScreen({ navigation, route }) {
   const [challengeName, setChallengeName] = useState('');
   const [description, setDescription] = useState('');
   const [duration, setDuration] = useState('');
@@ -14,8 +14,16 @@ export default function CreateChallengeScreen({ navigation }) {
   const [category, setCategory] = useState('fitness');
   const [isPublic, setIsPublic] = useState(true);
   const [isCommunity, setIsCommunity] = useState(false);
+  const [requirements, setRequirements] = useState([]);
   const [error, setError] = useState('');
   const isFormValid = challengeName.trim() && description.trim() && duration.trim();
+
+  const newRequirement = route.params?.newRequirement;
+  useEffect(() => {
+    if (newRequirement) {
+      setRequirements(prev => [...prev, newRequirement]);
+    }
+  }, [newRequirement]);
 
   const handleCreateChallenge = async () => {
     try {
@@ -157,6 +165,13 @@ export default function CreateChallengeScreen({ navigation }) {
             </Text>
           </View>
           <Toggle value={isCommunity} onValueChange={setIsCommunity} />
+        </View>
+        
+        <View style={styles.requirements}>
+          <Text style={styles.label}>Requirements</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('AddRequirement')}>
+            <Text>Add Requirement</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
       <View style={styles.footer}>
